@@ -1,18 +1,45 @@
 <script>
+	import { onMount } from 'svelte';
 	import Blend from './components/Blend.svelte';
+	import createColorPicker from './utils/createColorPicker.js';
 	import generateWitnessColor from './utils/generateWitnessColor.js';
 	import generateCSSVar from './utils/generateCSSVar.js';
 	
-	let fore = {r:0, g:0, b:0};
-	let back = {r:255, g:255, b:255};
+	let colors = {
+		fore: {r:0, g:0, b:0},
+		back: {r:255, g:255, b:255}
+	};
 	let alphas = [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1];
 
-	$: witness = generateWitnessColor(fore, back);
+	let forePicker = null;
+    let backPicker = null;
+
+	$: witness = generateWitnessColor(colors.fore, colors.back);
 	$: CSSVars = [
-		generateCSSVar('fore', fore),
-		generateCSSVar('back', back),
+		generateCSSVar('fore', colors.fore),
+		generateCSSVar('back', colors.back),
 		generateCSSVar('witness', witness),
 	].join(' ');
+
+	onMount(() => {
+		forePicker = createColorPicker('.picker.foreground');
+		backPicker = createColorPicker('.picker.background');
+		forePicker.on('init', picker => initPicker(picker, 'fore'));
+		backPicker.on('init', picker => initPicker(picker, 'back'));
+	});
+
+	function initPicker (picker, colorName) {
+		picker.on('change', color => updateColor(colorName, color.toRGBA()));
+	}
+
+	function updateColor(name, color) {
+		colors[name] = {
+			r: Math.round(color[0]),
+			g: Math.round(color[1]),
+			b: Math.round(color[2])
+		};
+		colors = colors;
+	}
 		
 </script>
 
@@ -28,7 +55,7 @@
 	<main>
 		{#each alphas as alpha}
 			<div class="swatch">
-				<Blend {fore} {back} {alpha} />
+				<Blend fore={colors.fore} back={colors.back} {alpha} />
 			</div>
 		{/each}
 	</main>
@@ -70,10 +97,11 @@
         font-size: 12px;
         font-weight: 400;
         line-height: 1.25em;
-    }
-    .picker.background .picker-value {
-        color: var(--fore);
-    }
+	}
+	.picker.foreground { background-color: var(--fore); }
+    .picker.foreground .picker-value { color: var(--back); }
+	.picker.background { background-color: var(--back); }
+    .picker.background .picker-value { color: var(--fore); }
     
     .swatch {
         grid-column-end: span 1;

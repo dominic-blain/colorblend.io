@@ -18,7 +18,7 @@
 <section style={CSSVars}>
     <div class="witness"></div>
     <div class="blended"></div>
-    <div class="foreground"></div>
+    <div class="swatch"></div>
     <h2 class:isReverse>
         RGBA<br/>
         {fore.r}, {fore.g}, {fore.b}, {alpha}<br/>
@@ -46,7 +46,7 @@
         z-index: 1;
         background: conic-gradient(from 0deg, var(--witness), transparent);
     }
-    .foreground,
+    .swatch,
     .blended {
         width: 100%;
         height: 50%;
@@ -56,7 +56,7 @@
     .blended {
         background-color: var(--blend);
     }
-    .foreground {
+    .swatch {
         background-color: var(--swatch);
     }
     h2 {
