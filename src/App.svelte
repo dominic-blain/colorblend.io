@@ -7,7 +7,7 @@
 	import generateCSSVar from './utils/generateCSSVar.js';
 	import generateColorsFromCode from './utils/generateColorsFromCode';
 
-	let title = 'CELORBLEND';
+	let title = 'COLORBLEND';
 	
 	let colors = {
 		fore: {r:0, g:0, b:0},
