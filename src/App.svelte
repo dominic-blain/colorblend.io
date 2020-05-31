@@ -1,9 +1,12 @@
 <script>
 	import { onMount } from 'svelte';
+	import TitleCharacter from './components/TitleCharacter.svelte';
 	import Blend from './components/Blend.svelte';
 	import createColorPicker from './utils/createColorPicker.js';
 	import generateWitnessColor from './utils/generateWitnessColor.js';
 	import generateCSSVar from './utils/generateCSSVar.js';
+
+	let title = 'COLORBLEND';
 	
 	let colors = {
 		fore: {r:0, g:0, b:0},
@@ -77,7 +80,11 @@
 </script>
 
 <section style={CSSVars}>
-	<h1>Colorblend</h1>
+	<h1>
+		{#each title.split('') as character, i}
+			<TitleCharacter {character} {...colors} progress={1 / ((title.length - 1) / i)} />
+		{/each}
+	</h1>
 	<div class="foreground picker">
 		<div class="picker-value"></div>
 	</div>
@@ -88,7 +95,7 @@
 	<main>
 		{#each alphas as alpha}
 			<div class="swatch">
-				<Blend fore={colors.fore} back={colors.back} {alpha} />
+				<Blend {...colors} {alpha} />
 			</div>
 		{/each}
 	</main>
