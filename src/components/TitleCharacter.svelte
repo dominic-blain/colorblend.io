@@ -11,8 +11,6 @@
         generateCSSVar('fore', blendColors(fore, back, progress)),
         generateCSSVar('back', blendColors(back, fore, progress))
     ].join(' ');
-
-    console.log(progress);
     
 </script>
 

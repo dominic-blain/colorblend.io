@@ -5,6 +5,7 @@
 	import createColorPicker from './utils/createColorPicker.js';
 	import generateWitnessColor from './utils/generateWitnessColor.js';
 	import generateCSSVar from './utils/generateCSSVar.js';
+	import generateColorsFromCode from './utils/generateColorsFromCode';
 
 	let title = 'COLORBLEND';
 	
@@ -31,6 +32,7 @@
 		colors.back.g,
 		colors.back.b,
 	].join('-'));
+	$: faviconHref = `/api/favicon/?${query.toString()}`
 
 	function initPicker (picker, colorName) {
 		picker.on('change', color => updateColor(colorName, color.toRGBA()));
@@ -52,21 +54,7 @@
 
 	function getColorsFromQuery() {
 		const code = new URL(window.location.href).searchParams.get('c');
-		if (!code) return;
-		const values = code.split('-').map(v => parseInt(v));
-		const colorsFromQuery = {
-			fore: {
-				r: !!values[0] ? values[0] : colors.fore.r,
-				g: !!values[1] ? values[1] : colors.fore.g,
-				b: !!values[2] ? values[2] : colors.fore.b
-			},
-			back: {
-				r: !!values[3] ? values[3] : colors.back.r,
-				g: !!values[4] ? values[4] : colors.back.g,
-				b: !!values[5] ? values[5] : colors.back.b
-			}
-		}
-		colors = colorsFromQuery;
+		colors = generateColorsFromCode(code, colors);
 	}
 
 	onMount(() => {
@@ -100,6 +88,10 @@
 		{/each}
 	</main>
 </section>
+
+<svelte:head>
+	<link rel="icon" type="image/svg+xml" href="{faviconHref}">
+</svelte:head>
 
 <style>
 	section {
