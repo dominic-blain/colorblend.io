@@ -20,16 +20,18 @@
 		generateCSSVar('back', colors.back),
 		generateCSSVar('witness', witness),
 	].join(' ');
-
-	onMount(() => {
-		forePicker = createColorPicker('.picker.foreground');
-		backPicker = createColorPicker('.picker.background');
-		forePicker.on('init', picker => initPicker(picker, 'fore'));
-		backPicker.on('init', picker => initPicker(picker, 'back'));
+	$: query = new URLSearchParams({
+		foreR: colors.fore.r,
+		foreG: colors.fore.g,
+		foreB: colors.fore.b,
+		backR: colors.back.r,
+		backG: colors.back.g,
+		backB: colors.back.b,
 	});
 
 	function initPicker (picker, colorName) {
 		picker.on('change', color => updateColor(colorName, color.toRGBA()));
+		picker.on('changestop', () => updateQuery())
 	}
 
 	function updateColor(name, color) {
@@ -40,6 +42,17 @@
 		};
 		colors = colors;
 	}
+
+	function updateQuery() {
+		window.history.pushState({}, '', '?' + query.toString())
+	}
+
+	onMount(() => {
+		forePicker = createColorPicker('.picker.foreground');
+		backPicker = createColorPicker('.picker.background');
+		forePicker.on('init', picker => initPicker(picker, 'fore'));
+		backPicker.on('init', picker => initPicker(picker, 'back'));
+	});
 		
 </script>
 
