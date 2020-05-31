@@ -8,14 +8,14 @@ export default function (code, defaultColors = DEFAULT_COLORS) {
     const values = code.split('-').map(v => parseInt(v));
     const colors = {
         fore: {
-            r: !!values[0] ? values[0] : defaultColors.fore.r,
-            g: !!values[1] ? values[1] : defaultColors.fore.g,
-            b: !!values[2] ? values[2] : defaultColors.fore.b
+            r: values[0] != 'NaN' ? values[0] : defaultColors.fore.r,
+            g: values[1] != 'NaN' ? values[1] : defaultColors.fore.g,
+            b: values[2] != 'NaN' ? values[2] : defaultColors.fore.b
         },
         back: {
-            r: !!values[3] ? values[3] : defaultColors.back.r,
-            g: !!values[4] ? values[4] : defaultColors.back.g,
-            b: !!values[5] ? values[5] : defaultColors.back.b
+            r: values[3] != 'NaN' ? values[3] : defaultColors.back.r,
+            g: values[4] != 'NaN' ? values[4] : defaultColors.back.g,
+            b: values[5] != 'NaN' ? values[5] : defaultColors.back.b
         }
     }
     return colors;

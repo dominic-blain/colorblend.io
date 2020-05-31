@@ -7,7 +7,7 @@
 	import generateCSSVar from './utils/generateCSSVar.js';
 	import generateColorsFromCode from './utils/generateColorsFromCode';
 
-	let title = 'COLORBLEND';
+	let title = 'CELORBLEND';
 	
 	let colors = {
 		fore: {r:0, g:0, b:0},
@@ -16,7 +16,9 @@
 	let alphas = [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1];
 
 	let forePicker = null;
-    let backPicker = null;
+	let backPicker = null;
+	let query = '';
+	$: faviconHref = `/api/favicon?${query.toString()}`;
 
 	$: witness = generateWitnessColor(colors.fore, colors.back);
 	$: CSSVars = [
@@ -24,15 +26,9 @@
 		generateCSSVar('back', colors.back),
 		generateCSSVar('witness', witness),
 	].join(' ');
-	$: query = new URLSearchParams('c=' + [
-		colors.fore.r,
-		colors.fore.g,
-		colors.fore.b,
-		colors.back.r,
-		colors.back.g,
-		colors.back.b,
-	].join('-'));
-	$: faviconHref = `/api/favicon/?${query.toString()}`
+	
+	$: console.log(query.toString());
+	
 
 	function initPicker (picker, colorName) {
 		picker.on('change', color => updateColor(colorName, color.toRGBA()));
@@ -49,12 +45,21 @@
 	}
 
 	function updateQuery() {
-		window.history.pushState({}, '', '?' + query.toString())
+		query = new URLSearchParams('c=' + [
+			colors.fore.r,
+			colors.fore.g,
+			colors.fore.b,
+			colors.back.r,
+			colors.back.g,
+			colors.back.b,
+		].join('-'));
+		window.history.pushState({}, '', '?' + query.toString());
 	}
 
 	function getColorsFromQuery() {
 		const code = new URL(window.location.href).searchParams.get('c');
 		colors = generateColorsFromCode(code, colors);
+		updateQuery();
 	}
 
 	onMount(() => {
