@@ -47,7 +47,18 @@
 		window.history.pushState({}, '', '?' + query.toString())
 	}
 
+	function getColorsFromQuery() {
+		const initialQuery = new URLSearchParams(window.location.href)
+        if (initialQuery.has('foreR')) colors.fore.r = parseInt(initialQuery.get('foreR'));
+        if (initialQuery.has('foreG')) colors.fore.g = parseInt(initialQuery.get('foreG'));
+        if (initialQuery.has('foreB')) colors.fore.b = parseInt(initialQuery.get('foreB'));
+        if (initialQuery.has('backR')) colors.back.r = parseInt(initialQuery.get('backR'));
+        if (initialQuery.has('backG')) colors.back.g = parseInt(initialQuery.get('backG'));
+        if (initialQuery.has('backB')) colors.back.b = parseInt(initialQuery.get('backB'));
+	}
+
 	onMount(() => {
+		getColorsFromQuery();
 		forePicker = createColorPicker('.picker.foreground');
 		backPicker = createColorPicker('.picker.background');
 		forePicker.on('init', picker => initPicker(picker, 'fore'));
