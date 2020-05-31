@@ -20,14 +20,14 @@
 		generateCSSVar('back', colors.back),
 		generateCSSVar('witness', witness),
 	].join(' ');
-	$: query = new URLSearchParams({
-		foreR: colors.fore.r,
-		foreG: colors.fore.g,
-		foreB: colors.fore.b,
-		backR: colors.back.r,
-		backG: colors.back.g,
-		backB: colors.back.b,
-	});
+	$: query = new URLSearchParams('c=' + [
+		colors.fore.r,
+		colors.fore.g,
+		colors.fore.b,
+		colors.back.r,
+		colors.back.g,
+		colors.back.b,
+	].join('-'));
 
 	function initPicker (picker, colorName) {
 		picker.on('change', color => updateColor(colorName, color.toRGBA()));
@@ -48,13 +48,22 @@
 	}
 
 	function getColorsFromQuery() {
-		const initialQuery = new URLSearchParams(window.location.href)
-        if (initialQuery.has('foreR')) colors.fore.r = parseInt(initialQuery.get('foreR'));
-        if (initialQuery.has('foreG')) colors.fore.g = parseInt(initialQuery.get('foreG'));
-        if (initialQuery.has('foreB')) colors.fore.b = parseInt(initialQuery.get('foreB'));
-        if (initialQuery.has('backR')) colors.back.r = parseInt(initialQuery.get('backR'));
-        if (initialQuery.has('backG')) colors.back.g = parseInt(initialQuery.get('backG'));
-        if (initialQuery.has('backB')) colors.back.b = parseInt(initialQuery.get('backB'));
+		const code = new URL(window.location.href).searchParams.get('c');
+		if (!code) return;
+		const values = code.split('-').map(v => parseInt(v));
+		const colorsFromQuery = {
+			fore: {
+				r: !!values[0] ? values[0] : colors.fore.r,
+				g: !!values[1] ? values[1] : colors.fore.g,
+				b: !!values[2] ? values[2] : colors.fore.b
+			},
+			back: {
+				r: !!values[3] ? values[3] : colors.back.r,
+				g: !!values[4] ? values[4] : colors.back.g,
+				b: !!values[5] ? values[5] : colors.back.b
+			}
+		}
+		colors = colorsFromQuery;
 	}
 
 	onMount(() => {
